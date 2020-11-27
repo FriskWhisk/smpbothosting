@@ -1,0 +1,5 @@
+mcstatus
+datetime
+os
+discord
+dotenv
