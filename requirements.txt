@@ -1,4 +1,3 @@
 mcstatus
 datetime
 discord
-dotenv
