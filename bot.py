@@ -9,15 +9,12 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client()
-server = MinecraftServer.lookup("142.44.135.67:25575")
-status = server.status()
 
 motd = [ motdtext['text'] for motdtext in status.raw['description']['extra']]
 #print(usersConnected)
 
 @client.event
 async def on_ready():
-    status = server.status()
     print(f'{client.user} has connected to Discord!')
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="your commands."))
     #print(status.raw)
@@ -25,6 +22,17 @@ async def on_ready():
 @client.event
 async def on_message(message):
     if message.author == client.user:
+        return
+    try:
+        server = MinecraftServer.lookup("142.44.135.67:25575")
+    except Exception:
+        auth = str(message.author).split("#")
+        dt = str(datetime.now()).split()
+        embed = discord.Embed(title="Error",colour=discord.Colour.red())
+        embed.add_field(name="~~~~~~~~~~~~~~~~~~~~",value="The server doesn't seem to be online.")
+        embed.set_thumbnail(url="https://media.discordapp.net/attachments/775408277616853075/779091594955587584/logoisgood.gif")
+        embed.set_footer(text=str(auth[0])+" • "+str(dt[0]))
+        await message.channel.send(embed=embed)
         return
     if message.content == 'sninfo':
         status = server.status()
